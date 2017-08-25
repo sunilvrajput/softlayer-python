@@ -196,7 +196,7 @@ class BlockTests(testing.TestCase):
             identifier=123,
         )
 
-    def test_cancel_snapshot_immediately_hourly_billing(self):
+    def test_cancel_snapshot_hourly_billing_immediate_true(self):
         mock = self.set_mock('SoftLayer_Network_Storage', 'getObject')
         mock.return_value = {
             'billingItem': {
@@ -209,6 +209,27 @@ class BlockTests(testing.TestCase):
         }
 
         self.block.cancel_snapshot_space(1234, immediate=True)
+
+        self.assert_called_with(
+            'SoftLayer_Billing_Item',
+            'cancelItem',
+            args=(True, True, 'No longer needed'),
+            identifier=417,
+        )
+
+    def test_cancel_snapshot_hourly_billing_immediate_false(self):
+        mock = self.set_mock('SoftLayer_Network_Storage', 'getObject')
+        mock.return_value = {
+            'billingItem': {
+                'activeChildren': [
+                    {'categoryCode': 'storage_snapshot_space', 'id': 417}
+                ],
+                'hourlyFlag': True,
+                'id': 449
+            },
+        }
+
+        self.block.cancel_snapshot_space(1234, immediate=False)
 
         self.assert_called_with(
             'SoftLayer_Billing_Item',
@@ -701,7 +722,8 @@ class BlockTests(testing.TestCase):
                 'location': 449500,
                 'duplicateOriginVolumeId': 102,
                 'osFormatType': {'keyName': 'LINUX'},
-                'iops': 1000
+                'iops': 1000,
+                'useHourlyPricing': False
             },))
 
         mock_volume['storageType']['keyName'] = prev_storage_type_keyname
@@ -747,7 +769,8 @@ class BlockTests(testing.TestCase):
                 'duplicateOriginVolumeId': 102,
                 'osFormatType': {'keyName': 'LINUX'},
                 'duplicateOriginSnapshotId': 470,
-                'iops': 2000
+                'iops': 2000,
+                'useHourlyPricing': False
             },))
 
         mock_volume['storageType']['keyName'] = prev_storage_type_keyname
@@ -783,7 +806,8 @@ class BlockTests(testing.TestCase):
                 'quantity': 1,
                 'location': 449500,
                 'duplicateOriginVolumeId': 102,
-                'osFormatType': {'keyName': 'LINUX'}
+                'osFormatType': {'keyName': 'LINUX'},
+                'useHourlyPricing': False
             },))
 
     def test_order_block_duplicate_endurance(self):
@@ -824,7 +848,8 @@ class BlockTests(testing.TestCase):
                 'location': 449500,
                 'duplicateOriginVolumeId': 102,
                 'osFormatType': {'keyName': 'LINUX'},
-                'duplicateOriginSnapshotId': 470
+                'duplicateOriginSnapshotId': 470,
+                'useHourlyPricing': False
             },))
 
     def test_setCredentialPassword(self):

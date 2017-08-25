@@ -3632,7 +3632,7 @@ class StorageUtilsTests(testing.TestCase):
         exception = self.assertRaises(
             exceptions.SoftLayerError,
             storage_utils.prepare_duplicate_order_object,
-            self.block, mock_volume, None, None, None, None, 'block'
+            self.block, mock_volume, None, None, None, None, 'block', False
         )
 
         self.assertEqual(str(exception),
@@ -3652,7 +3652,7 @@ class StorageUtilsTests(testing.TestCase):
         exception = self.assertRaises(
             exceptions.SoftLayerError,
             storage_utils.prepare_duplicate_order_object,
-            self.block, mock_volume, None, None, None, None, 'block'
+            self.block, mock_volume, None, None, None, None, 'block', False
         )
 
         self.assertEqual(str(exception),
@@ -3672,7 +3672,7 @@ class StorageUtilsTests(testing.TestCase):
         exception = self.assertRaises(
             exceptions.SoftLayerError,
             storage_utils.prepare_duplicate_order_object,
-            self.block, mock_volume, None, None, None, None, 'block'
+            self.block, mock_volume, None, None, None, None, 'block', False
         )
 
         self.assertEqual(str(exception),
@@ -3691,7 +3691,7 @@ class StorageUtilsTests(testing.TestCase):
         exception = self.assertRaises(
             exceptions.SoftLayerError,
             storage_utils.prepare_duplicate_order_object,
-            self.block, mock_volume, None, None, None, None, 'block'
+            self.block, mock_volume, None, None, None, None, 'block', False
         )
 
         self.assertEqual("This volume cannot be duplicated since it "
@@ -3711,7 +3711,7 @@ class StorageUtilsTests(testing.TestCase):
         exception = self.assertRaises(
             exceptions.SoftLayerError,
             storage_utils.prepare_duplicate_order_object,
-            self.block, mock_volume, None, None, None, None, 'block'
+            self.block, mock_volume, None, None, None, None, 'block', False
         )
 
         self.assertEqual(str(exception), "Cannot find origin volume's size.")
@@ -3740,10 +3740,11 @@ class StorageUtilsTests(testing.TestCase):
             'volumeSize': 500,
             'quantity': 1,
             'location': 449500,
-            'duplicateOriginVolumeId': 102}
+            'duplicateOriginVolumeId': 102,
+            'useHourlyPricing': False}
 
         result = storage_utils.prepare_duplicate_order_object(
-            self.block, mock_volume, None, None, None, None, 'block')
+            self.block, mock_volume, None, None, None, None, 'block', False)
 
         self.assertEqual(expected_object, result)
 
@@ -3758,7 +3759,7 @@ class StorageUtilsTests(testing.TestCase):
         exception = self.assertRaises(
             exceptions.SoftLayerError,
             storage_utils.prepare_duplicate_order_object,
-            self.block, mock_volume, None, None, 250, None, 'block'
+            self.block, mock_volume, None, None, 250, None, 'block', False
         )
 
         self.assertEqual(str(exception),
@@ -3775,7 +3776,7 @@ class StorageUtilsTests(testing.TestCase):
         exception = self.assertRaises(
             exceptions.SoftLayerError,
             storage_utils.prepare_duplicate_order_object,
-            self.block, mock_volume, None, None, 8000, None, 'block'
+            self.block, mock_volume, None, None, 8000, None, 'block', False
         )
 
         self.assertEqual(str(exception),
@@ -3802,7 +3803,7 @@ class StorageUtilsTests(testing.TestCase):
         exception = self.assertRaises(
             exceptions.SoftLayerError,
             storage_utils.prepare_duplicate_order_object,
-            self.block, mock_volume, None, None, None, None, 'block'
+            self.block, mock_volume, None, None, None, None, 'block', False
         )
 
         self.assertEqual(str(exception),
@@ -3824,7 +3825,7 @@ class StorageUtilsTests(testing.TestCase):
         exception = self.assertRaises(
             exceptions.SoftLayerError,
             storage_utils.prepare_duplicate_order_object,
-            self.block, mock_volume, 1000, None, 500, None, 'block'
+            self.block, mock_volume, 1000, None, 500, None, 'block', False
         )
 
         self.assertEqual(str(exception),
@@ -3846,7 +3847,7 @@ class StorageUtilsTests(testing.TestCase):
         exception = self.assertRaises(
             exceptions.SoftLayerError,
             storage_utils.prepare_duplicate_order_object,
-            self.block, mock_volume, 200, None, 1000, None, 'block'
+            self.block, mock_volume, 200, None, 1000, None, 'block', False
         )
 
         self.assertEqual(str(exception),
@@ -3880,10 +3881,11 @@ class StorageUtilsTests(testing.TestCase):
             'quantity': 1,
             'location': 449500,
             'duplicateOriginVolumeId': 102,
-            'iops': 1000}
+            'iops': 1000,
+            'useHourlyPricing': False}
 
         result = storage_utils.prepare_duplicate_order_object(
-            self.file, mock_volume, None, None, None, None, 'file')
+            self.file, mock_volume, None, None, None, None, 'file', False)
 
         self.assertEqual(expected_object, result)
 
@@ -3912,10 +3914,11 @@ class StorageUtilsTests(testing.TestCase):
             'quantity': 1,
             'location': 449500,
             'duplicateOriginVolumeId': 102,
-            'iops': 2000}
+            'iops': 2000,
+            'useHourlyPricing': False}
 
         result = storage_utils.prepare_duplicate_order_object(
-            self.block, mock_volume, 2000, None, 1000, 10, 'block')
+            self.block, mock_volume, 2000, None, 1000, 10, 'block', False)
 
         self.assertEqual(expected_object, result)
 
@@ -3944,10 +3947,11 @@ class StorageUtilsTests(testing.TestCase):
             'quantity': 1,
             'location': 449500,
             'duplicateOriginVolumeId': 102,
-            'iops': 2000}
+            'iops': 2000,
+            'useHourlyPricing': False}
 
         result = storage_utils.prepare_duplicate_order_object(
-            self.file, mock_volume, 2000, None, 1000, 10, 'file')
+            self.file, mock_volume, 2000, None, 1000, 10, 'file', False)
 
         self.assertEqual(expected_object, result)
 
@@ -3967,7 +3971,7 @@ class StorageUtilsTests(testing.TestCase):
         exception = self.assertRaises(
             exceptions.SoftLayerError,
             storage_utils.prepare_duplicate_order_object,
-            self.block, mock_volume, None, None, None, None, 'block'
+            self.block, mock_volume, None, None, None, None, 'block', False
         )
 
         self.assertEqual(str(exception),
@@ -3987,7 +3991,7 @@ class StorageUtilsTests(testing.TestCase):
         exception = self.assertRaises(
             exceptions.SoftLayerError,
             storage_utils.prepare_duplicate_order_object,
-            self.block, mock_volume, None, 2, None, None, 'block'
+            self.block, mock_volume, None, 2, None, None, 'block', False
         )
 
         self.assertEqual(str(exception),
@@ -4006,7 +4010,7 @@ class StorageUtilsTests(testing.TestCase):
         exception = self.assertRaises(
             exceptions.SoftLayerError,
             storage_utils.prepare_duplicate_order_object,
-            self.block, mock_volume, None, 0.25, None, None, 'block'
+            self.block, mock_volume, None, 0.25, None, None, 'block', False
         )
 
         self.assertEqual(str(exception),
@@ -4037,10 +4041,11 @@ class StorageUtilsTests(testing.TestCase):
             'volumeSize': 500,
             'quantity': 1,
             'location': 449500,
-            'duplicateOriginVolumeId': 102}
+            'duplicateOriginVolumeId': 102,
+            'useHourlyPricing': False}
 
         result = storage_utils.prepare_duplicate_order_object(
-            self.file, mock_volume, None, None, None, None, 'file')
+            self.file, mock_volume, None, None, None, None, 'file', False)
 
         self.assertEqual(expected_object, result)
 
@@ -4066,10 +4071,11 @@ class StorageUtilsTests(testing.TestCase):
             'volumeSize': 1000,
             'quantity': 1,
             'location': 449500,
-            'duplicateOriginVolumeId': 102}
+            'duplicateOriginVolumeId': 102,
+            'useHourlyPricing': False}
 
         result = storage_utils.prepare_duplicate_order_object(
-            self.block, mock_volume, None, 4.0, 1000, 10, 'block')
+            self.block, mock_volume, None, 4.0, 1000, 10, 'block', False)
 
         self.assertEqual(expected_object, result)
 
@@ -4095,10 +4101,11 @@ class StorageUtilsTests(testing.TestCase):
             'volumeSize': 1000,
             'quantity': 1,
             'location': 449500,
-            'duplicateOriginVolumeId': 102}
+            'duplicateOriginVolumeId': 102,
+            'useHourlyPricing': False}
 
         result = storage_utils.prepare_duplicate_order_object(
-            self.file, mock_volume, None, 4.0, 1000, 10, 'file')
+            self.file, mock_volume, None, 4.0, 1000, 10, 'file', False)
 
         self.assertEqual(expected_object, result)
 
@@ -4115,7 +4122,7 @@ class StorageUtilsTests(testing.TestCase):
         exception = self.assertRaises(
             exceptions.SoftLayerError,
             storage_utils.prepare_duplicate_order_object,
-            self.block, mock_volume, None, None, None, None, 'block'
+            self.block, mock_volume, None, None, None, None, 'block', False
         )
 
         self.assertEqual(str(exception),

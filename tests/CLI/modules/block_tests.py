@@ -574,6 +574,31 @@ class BlockTests(testing.TestCase):
                          'Order #24601 placed successfully!\n'
                          ' > Storage as a Service\n')
 
+    @mock.patch('SoftLayer.BlockStorageManager.order_duplicate_volume')
+    def test_duplicate_order_hourly_billing(self, order_mock):
+        order_mock.return_value = {
+            'placedOrder': {
+                'id': 24602,
+                'items': [{'description': 'Storage as a Service'}]
+            }
+        }
+
+        result = self.run_command(['block', 'volume-duplicate', '100',
+                                   '--origin-snapshot-id=470',
+                                   '--duplicate-size=250',
+                                   '--duplicate-tier=2', '--billing=hourly',
+                                   '--duplicate-snapshot-size=20'])
+
+        order_mock.assert_called_with('100', origin_snapshot_id=470,
+                                      duplicate_size=250, duplicate_iops=None,
+                                      duplicate_tier_level=2,
+                                      duplicate_snapshot_size=20,
+                                      hourly_billing_flag=True)
+        self.assert_no_fail(result)
+        self.assertEqual(result.output,
+                         'Order #24602 placed successfully!\n'
+                         ' > Storage as a Service\n')
+
     def test_set_password(self):
         result = self.run_command(['block', 'access-password', '1234', '--password=AAAAA'])
         self.assert_no_fail(result)
