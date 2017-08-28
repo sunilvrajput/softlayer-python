@@ -619,6 +619,13 @@ def prepare_volume_order_object(manager, storage_type, location, size,
     :return: Returns the order object for the
              Product_Order service's placeOrder() method
     """
+
+    if hourly_billing_flag and service_offering != 'storage_as_a_service':
+        raise exceptions.SoftLayerError(
+            'Hourly billing is only available for the storage_as_a_service '
+            'service offering'
+        )
+
     # Ensure the volume storage type is valid
     if storage_type != 'performance' and storage_type != 'endurance':
         raise exceptions.SoftLayerError(

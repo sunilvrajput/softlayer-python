@@ -446,8 +446,11 @@ class FileStorageManager(utils.IdentifierMixin, object):
         """
         file_volume = self.get_file_volume_details(
             volume_id,
-            mask='mask[id,billingItem[id]]')
+            mask='mask[id,billingItem[id,hourlyFlag]]')
         billing_item_id = file_volume['billingItem']['id']
+
+        if utils.lookup(file_volume, 'billingItem', 'hourlyFlag'):
+            immediate = True
 
         return self.client['Billing_Item'].cancelItem(
             immediate,

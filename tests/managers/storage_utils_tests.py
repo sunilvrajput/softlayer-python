@@ -2879,6 +2879,46 @@ class StorageUtilsTests(testing.TestCase):
 
         self.assertEqual(expected_object, result)
 
+    def test_prep_snapshot_order_hourly_billing(self):
+        mock = self.set_mock('SoftLayer_Product_Package', 'getAllObjects')
+        mock.return_value = [fixtures.SoftLayer_Product_Package.SAAS_PACKAGE]
+
+        mock_volume = fixtures.SoftLayer_Network_Storage.STAAS_TEST_VOLUME
+        prev_hourly_flag = mock_volume['billingItem']['hourlyFlag']
+        mock_volume['billingItem']['hourlyFlag'] = True
+
+        expected_object = {
+            'complexType': 'SoftLayer_Container_Product_Order_'
+                           'Network_Storage_Enterprise_SnapshotSpace',
+            'packageId': 759,
+            'prices': [{'id': 193853}],
+            'quantity': 1,
+            'location': 449500,
+            'volumeId': 102,
+            'useHourlyPricing': True
+        }
+
+        result = storage_utils.prepare_snapshot_order_object(
+            self.block, mock_volume, 20, None, False
+        )
+
+        self.assertEqual(expected_object, result)
+
+        mock_volume['billingItem']['hourlyFlag'] = prev_hourly_flag
+
+    def test_prep_volume_order_invalid_storage_type_with_hourly(self):
+        exception = self.assertRaises(
+            exceptions.SoftLayerError,
+            storage_utils.prepare_volume_order_object,
+            self.block, 'performance', 'dal10', 100,
+            None, 4, None, 'performance', 'block', True
+        )
+
+        self.assertEqual(
+            "Hourly billing is only available for the storage_as_a_service service offering",
+            str(exception)
+        )
+
     # ---------------------------------------------------------------------
     # Tests for prepare_volume_order_object()
     # ---------------------------------------------------------------------
