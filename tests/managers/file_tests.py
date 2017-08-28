@@ -761,12 +761,11 @@ class FileTests(testing.TestCase):
     def test_file_volume_order_invalid_storage_type_with_hourly(self):
         exception = self.assertRaises(
             exceptions.SoftLayerError,
-            self.file.order_file_volume ,
+            self.file.order_file_volume,
             'performance', 'dal10', 100,
             None, 4, None, 'performance', True
         )
 
         self.assertEqual(
             "Hourly billing is only available for the storage_as_a_service service offering",
-            str(exception)
-        )
+            str(exception))
