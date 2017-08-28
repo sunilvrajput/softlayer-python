@@ -515,12 +515,11 @@ class FileTests(testing.TestCase):
                          'Order #24602 placed successfully!\n'
                          ' > Storage as a Service\n')
 
-
-    def test_volume_order_performance_iops_not_given(self):
+    def test_volume_order_performance_hourly_billing_not_available(self):
         result = self.run_command(['file', 'volume-order',
                                    '--storage-type=performance', '--size=20',
-                                   '--location=dal10', '--iops 200',
-                                   '--service-offering performance',
+                                   '--location=dal10', '--iops=200',
+                                   '--service-offering=performance',
                                    '--billing=hourly'])
 
         self.assertEqual(2, result.exit_code)
@@ -551,3 +550,24 @@ class FileTests(testing.TestCase):
                          ' > Storage as a Service\n > File Storage\n'
                          ' > 0.25 IOPS per GB\n > 20 GB Storage Space\n'
                          ' > 10 GB Storage Space (Snapshot Space)\n')
+
+    @mock.patch('SoftLayer.FileStorageManager.order_duplicate_volume')
+    def test_duplicate_order_hourly(self, order_mock):
+        order_mock.return_value = {
+            'placedOrder': {
+                'id': 24602,
+                'items': [{'description': 'Storage as a Service'}]
+            }
+        }
+
+        result = self.run_command(['file', 'volume-duplicate', '100',
+                                   '--origin-snapshot-id=470',
+                                   '--duplicate-size=250',
+                                   '--duplicate-tier=2',
+                                   '--duplicate-snapshot-size=20',
+                                   '--billing=hourly'])
+
+        self.assert_no_fail(result)
+        self.assertEqual(result.output,
+                         'Order #24602 placed successfully!\n'
+                         ' > Storage as a Service\n')
