@@ -290,7 +290,7 @@ class BlockStorageManager(utils.IdentifierMixin, object):
 
         order = storage_utils.prepare_duplicate_order_object(
             self, origin_volume, duplicate_iops, duplicate_tier_level,
-            duplicate_size, duplicate_snapshot_size, 'block',hourly_billing_flag
+            duplicate_size, duplicate_snapshot_size, 'block', hourly_billing_flag
         )
 
         order['osFormatType'] = {'keyName': os_type}
